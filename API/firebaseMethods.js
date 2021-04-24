@@ -2,7 +2,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
 
-export async function registration(email, password, lastName = '', firstName = '') {
+export async function register(email, password, lastName = '', firstName = '') {
     try {
         await firebase.auth().createUserWithEmailAndPassword(email, password);
         const currentUser = firebase.auth().currentUser;
@@ -15,8 +15,9 @@ export async function registration(email, password, lastName = '', firstName = '
                 lastName: lastName,
                 firstName: firstName,
             });
+        Alert.alert('Signed up');
     } catch (err) {
-        Alert.alert("There is something wrong!!!!", err.message);
+        Alert.alert('Could not sign up', err.message);
     }
 }
 
@@ -25,15 +26,17 @@ export async function signIn(email, password) {
         await firebase
             .auth()
             .signInWithEmailAndPassword(email, password);
+        Alert.alert('Signed in');
     } catch (err) {
-        Alert.alert("There is something wrong!", err.message);
+        Alert.alert('Could not sign in', err.message);
     }
 }
 
-export async function loggingOut() {
+export async function signOut() {
     try {
         await firebase.auth().signOut();
+        Alert.alert('Signed out');
     } catch (err) {
-        Alert.alert('There is something wrong!', err.message);
+        Alert.alert('Could not sign out', err.message);
     }
 }
