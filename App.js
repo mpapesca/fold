@@ -1,61 +1,27 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
 import * as firebase from 'firebase';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import apiKeys from './config/keys';
-import { register, signIn, signOut } from './API/firebaseMethods';
-import TextField from './components/common/text-field';
+import SignInScreen from './screens/auth/sign-in-screen';
 
 // Initialize firebase if it hasn't been initialized yet
 if (!firebase.apps.length) {
-  console.log('Initializing Firebase')
-  firebase.initializeApp(apiKeys.firebaseConfig);
+	console.log('Initializing Firebase')
+	firebase.initializeApp(apiKeys.firebaseConfig);
 }
+
+const AuthStack = createStackNavigator();
 
 export default App = () => {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-
-  return (
-    <View style={styles.container}>
-      <Text>{firebase.auth().currentUser != null ? 'Logged In' : 'Logged Out'}</Text>
-      <Text style={styles.title}>Register</Text>
-      <TextField label='Email' onChangeText={(text) => setEmail(text)} />
-      <TextField label='Password' onChangeText={(text) => setPassword(text)} />
-      <TextField label='First Name' onChangeText={(text) => setFirstName(text)} />
-      <TextField label='Last Name' onChangeText={(text) => setLastName(text)} />
-      <View style={styles.buttonGroup}>
-        <Button
-          onPress={() => register(email, password, firstName, lastName)}
-          title='Sign Up'
-        />
-        <Button
-          onPress={() => signIn(email, password)}
-          title='Sign In'
-        />
-        <Button
-          onPress={() => signOut()}
-          title='Sign Out'
-        />
-      </View>
-    </View>
-  );
+	return (
+		<NavigationContainer>
+			<AuthStack.Navigator>
+				<AuthStack.Screen name="SignIn" component={SignInScreen} />
+			</AuthStack.Navigator>
+		</NavigationContainer>
+	);
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 36
-  },
-  buttonGroup: {
-    flexDirection: 'row'
-  }
-});
