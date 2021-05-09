@@ -1,9 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import * as firebase from 'firebase';
 import apiKeys from './config/keys';
 import { register, signIn, signOut } from './API/firebaseMethods';
+import TextField from './components/common/text-field';
 
 // Initialize firebase if it hasn't been initialized yet
 if (!firebase.apps.length) {
@@ -20,6 +20,7 @@ export default App = () => {
 
   return (
     <View style={styles.container}>
+      <Text>{firebase.auth().currentUser != null ? 'Logged In' : 'Logged Out'}</Text>
       <Text style={styles.title}>Register</Text>
       <TextField label='Email' onChangeText={(text) => setEmail(text)} />
       <TextField label='Password' onChangeText={(text) => setPassword(text)} />
@@ -29,33 +30,20 @@ export default App = () => {
         <Button
           onPress={() => register(email, password, firstName, lastName)}
           title='Sign Up'
-          color='black'
         />
         <Button
           onPress={() => signIn(email, password)}
           title='Sign In'
-          color='black'
         />
         <Button
           onPress={() => signOut()}
           title='Sign Out'
-          color='black'
         />
       </View>
     </View>
   );
 };
 
-export const TextField = (props) => {
-  return (
-    <View style={styles.textFieldContainer}>
-      <Text style={styles.textFieldLabel}>{props.label}</Text>
-      <TextInput style={styles.textFieldInput}
-        clearButtonMode='while-editing'
-        onChangeText={props.onChangeText} />
-    </View>
-  )
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -66,26 +54,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36
-  },
-  textFieldContainer: {
-    margin: 8
-  },
-  textFieldInput: {
-    borderColor: 'grey',
-    borderWidth: 1,
-    height: 32,
-    width: 250,
-    padding: 4
-  },
-  textFieldLabel: {
-    fontSize: 16
-  },
-  button: {
-    borderColor: 'black',
-    borderWidth: 1
-  },
-  buttonText: {
-    fontSize: 16
   },
   buttonGroup: {
     flexDirection: 'row'
